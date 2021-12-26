@@ -102,27 +102,22 @@ function mostrarPlatillos(platos) {
 function agregarPlatillo(producto) {
   let {pedido} = cliente;
 
-  
   if(producto.cantidad > 0) {
     if(pedido.some(p => p.id === producto.id)) {
       const pedidoLista = pedido.map(p => {
         if(p.id === producto.id) {
-          p.cantidad++;
-          return p;
-        }else {
-          return p;
+          p.cantidad = producto.cantidad;
         }
+        return p;
       });
       cliente.pedido = [...pedidoLista];
     }else {
       cliente.pedido = [...pedido, producto];
     }
-    
-        
-
-    console.log(cliente.pedido)
   } else {
-
+    cliente.pedido = pedido.filter(p => p.id !== producto.id);
   }
+
+  console.log(cliente.pedido)
 
 }
