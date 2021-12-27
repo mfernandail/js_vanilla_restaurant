@@ -118,6 +118,114 @@ function agregarPlatillo(producto) {
     cliente.pedido = pedido.filter(p => p.id !== producto.id);
   }
 
-  console.log(cliente.pedido)
+  limpiarHTML();
 
+  actualizarResumen();
+}
+function actualizarResumen() {
+  const contenido = document.querySelector('#resumen .contenido');
+  const resumen = document.createElement('div');
+  resumen.classList.add('col-md-6', 'card', 'py-5', 'px-3', 'shadow');
+
+  const mesa = document.createElement('p');
+  mesa.textContent = 'Mesa: ';
+  mesa.classList.add('fw-bold');
+
+  const mesaSpan = document.createElement('span');
+  mesaSpan.textContent = cliente.mesa;
+  mesaSpan.classList.add('fw-normal');
+  
+  const hora = document.createElement('p');
+  hora.textContent = 'Hora: ';
+  hora.classList.add('fw-bold');
+
+  const horaSpan = document.createElement('span');
+  horaSpan.textContent = cliente.hora;
+  horaSpan.classList.add('fw-normal');
+
+  mesa.appendChild(mesaSpan);
+  hora.appendChild(horaSpan);
+
+  const titulo = document.createElement('h3');
+  titulo.textContent = 'Platos Consumidos';
+  titulo.classList.add('my-4', 'text-center');
+
+  const grupo = document.createElement('ul');
+  grupo.classList.add('list-group');
+  cliente.pedido.forEach(p => {
+    const {cantidad, categoria, id, nombre, precio} = p;
+
+    const li = document.createElement('li');
+    li.classList.add('list-group-item');
+    li.innerHTML = ``
+
+    const nombreEl = document.createElement('h4');
+    nombreEl.classList.add('my-4');
+    nombreEl.textContent = nombre;
+
+    const cantidadEl = document.createElement('p');
+    cantidadEl.classList.add('my-4');
+    cantidadEl.textContent = 'Cantidad: ';
+
+    const cantidadValor = document.createElement('span');
+    cantidadValor.classList.add('fw-normal');
+    cantidadValor.textContent = cantidad;
+    
+    cantidadEl.appendChild(cantidadValor);
+
+    const precioEl = document.createElement('p');
+    precioEl.classList.add('my-4');
+    precioEl.textContent = 'Precio: ';
+
+    const precioValor = document.createElement('span');
+    precioValor.classList.add('fw-normal');
+    precioValor.textContent = `$ ${precio} c/u`;
+    
+    precioEl.appendChild(precioValor);
+
+    const subtotalArticulo = document.createElement('p');
+    subtotalArticulo.classList.add('fw-bold');
+    subtotalArticulo.textContent = 'Subtotal: ';
+
+    const subtotal = document.createElement('span');
+    subtotal.classList.add('fw-normal');
+    subtotal.textContent = `$ ${precio * cantidad}`;
+    
+    subtotalArticulo.appendChild(subtotal);
+
+    const btnEliminar = document.createElement('button');
+    btnEliminar.classList.add('btn', 'btn-danger');
+    btnEliminar.textContent = 'Eliminar';
+    btnEliminar.onclick = () => {
+      eliminarCompra(id);
+    }
+    
+    li.appendChild(nombreEl);
+    li.appendChild(cantidadEl);
+    li.appendChild(precioEl);
+    li.appendChild(subtotalArticulo);
+    li.appendChild(btnEliminar);
+
+    grupo.appendChild(li);
+
+  });
+
+  resumen.appendChild(mesa);
+  resumen.appendChild(hora);
+  resumen.appendChild(titulo);
+  resumen.appendChild(grupo);
+
+  contenido.appendChild(resumen);
+}
+function eliminarCompra(id) {
+  cliente.pedido = cliente.pedido.filter(p => p.id !== id);
+  limpiarHTML();
+  actualizarResumen();
+}
+function limpiarHTML() {
+  const contenido = document.querySelector('#resumen .contenido');
+
+  while(contenido.firstChild) {
+    contenido.removeChild(contenido.firstChild);
+  } 
 }
